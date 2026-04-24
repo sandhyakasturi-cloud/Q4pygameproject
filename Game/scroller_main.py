@@ -1,5 +1,6 @@
 import pygame
 from gamebanner import GameBanner
+from startbutton import StartButton
 from shapetransformation import Point
 # Global constants
  
@@ -10,6 +11,7 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 PURPLE = (128, 0, 128)
+LIGHTGRAY = (221, 221, 221)
 
  
 # Screen dimensions
@@ -29,14 +31,25 @@ def main():
     screen_midpoint = Point(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
     banner = GameBanner(screen_midpoint)
     banner.draw(screen, "SCROLL GAME", RED, WHITE)
-    
+    start = StartButton(screen_midpoint)
+    start.draw(screen, "Start Game", LIGHTGRAY, BLACK )
     clock = pygame.time.Clock()
 
     done = False
     while not done:
+        mouse_x = mouse_y = None
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True 
+            elif event.type == pygame.MOUSEBUTTONUP:
+                 pos = pygame.mouse.get_pos()
+                 mouse_x = pos[0]
+                 mouse_y = pos[1]
+        
+        if mouse_x != None and mouse_y != None:
+            if  start.isClicked(mouse_x, mouse_y):
+                screen.fill(PURPLE)
+                start.visible = False
         clock.tick(60)
         pygame.display.flip()
     
