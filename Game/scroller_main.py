@@ -2,6 +2,7 @@ import pygame
 from gamebanner import GameBanner
 from startbutton import StartButton
 from shapetransformation import Point
+from gamesprite import GameSprite
 # Global constants
  
 # Colors
@@ -33,6 +34,10 @@ def main():
     banner.draw(screen, "SCROLL GAME", RED, WHITE)
     start = StartButton(screen_midpoint)
     start.draw(screen, "Start Game", LIGHTGRAY, BLACK )
+
+    #create player sprite
+    player = GameSprite()
+
     clock = pygame.time.Clock()
 
     done = False
@@ -48,7 +53,9 @@ def main():
         
         if mouse_x != None and mouse_y != None:
             if  start.isClicked(mouse_x, mouse_y):
-                screen.fill(PURPLE)
+                background_image = pygame.image.load("Game/bluesky.jpeg").convert()
+                screen.blit(background_image,[0,0])
+                player.draw(screen, screen_midpoint.x-player.width/2, screen_midpoint.y+200)
                 start.visible = False
         clock.tick(60)
         pygame.display.flip()
