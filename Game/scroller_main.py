@@ -3,6 +3,7 @@ from gamebanner import GameBanner
 from startbutton import StartButton
 from shapetransformation import Point
 from gamesprite import GameSprite
+from level import Level
 # Global constants
  
 # Colors
@@ -36,8 +37,10 @@ def main():
     start.draw(screen, "Start Game", LIGHTGRAY, BLACK )
 
     #create player sprite
-    player = GameSprite()
+    player = GameSprite("Game/monstersprite.png", 69, 69)
 
+    # create levels
+    level = Level()
     clock = pygame.time.Clock()
 
     done = False
@@ -50,12 +53,20 @@ def main():
                  pos = pygame.mouse.get_pos()
                  mouse_x = pos[0]
                  mouse_y = pos[1]
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            level.shift_world(5)
+        if keys[pygame.K_RIGHT]:
+            level.shift_world(-5)
         
+        if not start.visible:
+            screen.blit(background_image,[0,0])
+            player.draw(screen, screen_midpoint.x-player.width/2, screen_midpoint.y+100)
+            level.draw(screen)
+
         if mouse_x != None and mouse_y != None:
             if  start.isClicked(mouse_x, mouse_y):
                 background_image = pygame.image.load("Game/bluesky.jpeg").convert()
-                screen.blit(background_image,[0,0])
-                player.draw(screen, screen_midpoint.x-player.width/2, screen_midpoint.y+200)
                 start.visible = False
         clock.tick(60)
         pygame.display.flip()
