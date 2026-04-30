@@ -1,68 +1,59 @@
 import pygame
-from gamesprite import GameSprite
 import random
+from gamesprite import GameSprite 
 
 class Level:
     def __init__(self):
-        self.blocks = []
-
-        spriteSheet = pygame.image.load("Game/blocksspritesheet.png").convert_alpha()
-        
-        # make block sprites
-        level = []
-
-        start_x = 0
-        start_y = 0
-        end_x   = 729
-        end_y   = 249
-        s_w = 80
-        s_h = 80
-        x_new = start_x
-        y_new = start_y
-        for row in range(100):
-            for col in range(100):
-                x = start_x + s_w * ((col+1) % 9) 
-                y = start_y + s_h * ((row+1) % 3)
-                block = GameSprite(spriteSheet,s_w,s_h,(x,y,s_w,s_h))
-                self.blocks.append(block)
-                x_new = x_new + x
-                y_new = y_new
-                level.append([x_new*0.3,500])
-
- 
-        # Go through the array above and add platforms
         self.platforms_list = pygame.sprite.Group()
-        for platform in level:
-            block = self.blocks[random.randint(0,len(self.blocks)-1)]
-            block.rect.x = platform[0]
-            block.rect.y = platform[1]
-            #plant.player = self.player
-            self.platforms_list.add(block)
-
-        # How far this world has been scrolled left/right
         self.world_shift = 0
 
-    # Update everythign on this level
-    def update(self):
-        """ Update everything in this level."""
-        self.platforms_list.update()
-        #self.enemy_list.update()
- 
+        # Load the spritesheet
+        try:
+            spriteSheet = pygame.image.load("Game/blocksspritesheet.png").convert_alpha()
+        except:
+            spriteSheet = pygame.Surface((800, 800))
+            spriteSheet.fill((255, 0, 255))
+
+        s_w, s_h = 80, 80
+        block_templates = []
+        for row in range(3):
+            for col in range(9):
+                block_templates.append((col * s_w, row * s_h, s_w, s_h))
+
+        # Fixed position so the player always has a place to land
+        style = block_templates[0] 
+        for i in range(4): # Slightly wider start
+            block = GameSprite(spriteSheet, s_w, s_h, style)
+            block.rect.x = 80 + (i * s_w) 
+            block.rect.y = 450 
+            self.platforms_list.add(block)
+
+        current_x = 450 
+        last_y = 450 # Track height to prevent impossible climbs
+
+        for _ in range(50):
+            p_width = random.randint(2, 4)
+            
+            # Limit vertical spacing of the plafroms to allow jumping between platforms
+            p_y = random.randint(max(200, last_y - 100), min(480, last_y + 100))
+            
+            style = random.choice(block_templates)
+
+            for i in range(p_width):
+                block = GameSprite(spriteSheet, s_w, s_h, style)
+                block.rect.x = current_x + (i * s_w)
+                block.rect.y = p_y
+                self.platforms_list.add(block)
+
+            # We set the space between the platforms so that the player can make the jump.
+            gap = random.randint(120, 240)
+            current_x += (p_width * s_w) + gap
+            last_y = p_y # Update height for the next platform
+
     def draw(self, screen):
-        # Draw everything on this level.
         self.platforms_list.draw(screen)
-        #self.enemy_list.draw(screen)
- 
+
     def shift_world(self, shift_x):
-        """ When the user moves left/right and we need to scroll
-        everything: """
- 
-        # Keep track of the shift amount
         self.world_shift += shift_x
- 
-        # Go through all the sprite lists and shift
-        for floorItems in self.platforms_list:
-            floorItems.rect.x += shift_x
- 
-        #for enemy in self.enemy_list:
-            #enemy.rect.x += shift_x
+        for sprite in self.platforms_list:
+            sprite.rect.x += shift_x
