@@ -11,15 +11,16 @@ class Coin(GameSprite):
         Coin.coin1 = self.image
         self.flipAfter = 60
 
-        sprite = pygame.image.load("Game/coin2.jpg").convert_alpha() 
+        if Coin.coin2 is None:
+            sprite = pygame.image.load("Game/coin2.jpg").convert_alpha() 
 
-        first_color = sprite.get_at((0, 0))
-        # 2. Set the colorkey
-        sprite.set_colorkey(first_color)
+            first_color = sprite.get_at((0, 0))
+            # 2. Set the colorkey
+            sprite.set_colorkey(first_color)
 
-        # 3. Create target surface with transparent alpha
-        Coin.coin2 = pygame.Surface([self.width,self.height], pygame.SRCALPHA)
-        Coin.coin2.blit(sprite, [0,0])
+            # 3. Create target surface with transparent alpha
+            Coin.coin2 = pygame.Surface([self.width,self.height], pygame.SRCALPHA)
+            Coin.coin2.blit(sprite, [0,0])
     
         self.coinList = [Coin.coin1,Coin.coin2]
         self.coinIndex = 0
