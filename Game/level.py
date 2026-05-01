@@ -1,10 +1,12 @@
 import pygame
 import random
 from gamesprite import GameSprite 
+from coin import Coin
 
 class Level:
     def __init__(self):
         self.platforms_list = pygame.sprite.Group()
+        self.coin_list = pygame.sprite.Group()
         self.world_shift = 0
 
         # Load the spritesheet
@@ -44,6 +46,12 @@ class Level:
                 block.rect.x = current_x + (i * s_w)
                 block.rect.y = p_y
                 self.platforms_list.add(block)
+                coinpercent = random.randint(1, 100)
+                if coinpercent <= 40:
+                    coin = Coin("Game/coin.jpg",56, 72)
+                    coin.rect.x = block.rect.x
+                    coin.rect.y = block.rect.y - block.height - block.height*random.randint(0,2)
+                    self.coin_list.add(coin)
 
             # We set the space between the platforms so that the player can make the jump.
             gap = random.randint(120, 240)
@@ -52,8 +60,16 @@ class Level:
 
     def draw(self, screen):
         self.platforms_list.draw(screen)
+        for sprite in self.coin_list:
+            sprite.switch()
+        self.coin_list.draw(screen)
 
     def shift_world(self, shift_x):
         self.world_shift += shift_x
         for sprite in self.platforms_list:
             sprite.rect.x += shift_x
+        for sprite in self.coin_list:
+            sprite.rect.x += shift_x
+        
+
+    

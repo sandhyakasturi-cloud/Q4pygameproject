@@ -5,6 +5,7 @@ from startbutton import StartButton
 from shapetransformation import Point
 from player import Player
 from level import Level
+from gamesprite import GameSprite
 
 # --- Constants ---
 BLACK = (0, 0, 0)
@@ -34,7 +35,8 @@ def main():
     player = Player("Game/monstersprite.png", 69, 69)
     player.rect.x, player.rect.y = 150, 100 
     level = Level()
-    
+
+
     try:
         background_image = pygame.image.load("Game/bluesky.jpeg").convert()
         background_image = pygame.transform.scale(background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
