@@ -9,6 +9,7 @@ class Player(GameSprite):
         self.gravity = 0.5
         self.jump_speed = -12
         self.speed = 7
+        self.score = 0
 
     def update(self, level):
         # 1. Apply Gravity
@@ -27,8 +28,24 @@ class Player(GameSprite):
                 self.rect.top = block.rect.bottom
                 self.change_y = 0
 
+            # SPECIAL CHECK: If the thing we hit is the treasure chest
+            if block == level.treasure_chest:
+                return "WIN"
+
+
         # 4. Move Horizontally
         self.rect.x += self.change_x
+
+        coins_hit_list = pygame.sprite.spritecollide(self, level.coin_list, True)
+
+        if len(coins_hit_list) > 0:
+            pygame.mixer.music.load("Game/coin_collected.mp3")
+            pygame.mixer.music.play(0, 1)
+        # Optional: If you want to track a score
+        for coin in coins_hit_list:
+            self.score = self.score + 1
+        
+        return None
 
     def jump(self):
         # Instead of change_y == 0, check if it's very small 

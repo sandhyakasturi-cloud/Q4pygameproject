@@ -58,6 +58,28 @@ class Level:
             current_x += (p_width * s_w) + gap
             last_y = p_y # Update height for the next platform
 
+        # create the final platform
+        style = block_templates[1] # Choose a specific style for the finish
+        final_ground_width = 10 # Make it wide so it's hard to miss
+        
+        ground_y = 520
+        final_block_x = current_x
+        for i in range(final_ground_width):
+            block = GameSprite(spriteSheet, s_w, s_h, style)
+            block.rect.x = current_x + (i * s_w)
+            final_block_x = block.rect.x
+            block.rect.y = ground_y # Place it low on the screen
+            self.platforms_list.add(block)
+            
+        # Store the finish line X coordinate so we can check for a win later
+        self.finish_line_x = current_x
+        self.limit = current_x
+
+        self.treasure_chest = GameSprite("Game/treasurechest.png", 150,103)
+        self.treasure_chest.rect.x = final_block_x - 150
+        self.treasure_chest.rect.y = ground_y - 105
+        self.platforms_list.add(self.treasure_chest)
+
     def draw(self, screen):
         self.platforms_list.draw(screen)
         for sprite in self.coin_list:

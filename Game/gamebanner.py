@@ -11,7 +11,7 @@ class GameBanner(list):
         self.extend(banner_image)
 
     def draw(self, screen, text, bannerColor, textColor):
-        my_font = pygame.font.SysFont('Arial', 80,True)
+        my_font = pygame.font.SysFont('Impact', 80,True)
         text_surface = my_font.render(text, True, textColor)
         pygame.draw.ellipse(screen,bannerColor,self)
         textX = ShapeTransformations.midPoint(self[0],self[0]+self[2])
