@@ -88,6 +88,12 @@ def main():
                     pygame.mixer.music.play(0, 1)
                     pygame.time.delay(40)
 
+                # Initialize Player & Level
+                player = Player("Game/monstersprite.png", 69, 69)
+                player.rect.x, player.rect.y = 150, 100 
+                level = Level()                
+                game_bkgd.play()
+
             if player.rect.right >= 500:
                 # Only scroll if the world hasn't shifted to the limit yet
                 if abs(level.world_shift) < level.limit:
